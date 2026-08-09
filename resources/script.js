@@ -456,10 +456,7 @@ let rawMoviesData = [];
                 </div>
                 <div class="rating-badge">
                     <span style="opacity: 0.7; margin-right: 5px;">${appSettings.user1_name[0] || 'U1'}&${appSettings.user2_name[0] || 'U2'}:</span> 
-                    <input type="text" class="rating-input" style="width: 40px; background: transparent; border: 1px solid transparent; color: inherit; font-size: inherit; text-align: center;" value="${item.rm_rating || ''}" 
-                        onfocus="handleInputFocus(this, '${item.id.replace(/'/g, "\\'")}', 'rm_rating')" 
-                        onblur="handleInputBlur(this)"
-                        onkeydown="if(event.key==='Enter') { this.nextElementSibling?.click(); this.blur(); }" placeholder="-">
+                    ${window.generateStarRatingHtml(item.id, item.rm_rating)}
                 </div>
             </div>
         `;
@@ -718,10 +715,7 @@ let rawMoviesData = [];
             // R&M Rating Col
             const tdRmRating = document.createElement('td');
             tdRmRating.innerHTML = `
-                <input type="text" class="rating-input" value="${item.rm_rating || ''}" 
-                    onfocus="handleInputFocus(this, '${item.id.replace(/'/g, "\\'")}', 'rm_rating')" 
-                    onblur="handleInputBlur(this)"
-                    onkeydown="if(event.key==='Enter') { this.nextElementSibling?.click(); this.blur(); }" placeholder="-">
+                ${window.generateStarRatingHtml(item.id, item.rm_rating)}
             `;
             tr.appendChild(tdRmRating);
 
@@ -808,6 +802,22 @@ let rawMoviesData = [];
             }
         }
     }
+
+    window.setStarRating = function(id, rating) {
+        updateData(id, { 'rm_rating': String(rating) });
+    };
+
+    window.generateStarRatingHtml = function(id, currentRating) {
+        const val = parseFloat(currentRating) || 0;
+        const maxStars = 10;
+        let html = `<div class="star-rating" data-id="${id}">`;
+        for (let i = maxStars; i >= 1; i--) {
+            const isFilled = val >= i;
+            html += `<span class="star ${isFilled ? 'filled' : ''}" onclick="event.stopPropagation(); setStarRating('${id.replace(/'/g, "\\'")}', ${i})" title="${i}/10">★</span>`;
+        }
+        html += `</div>`;
+        return html;
+    };
 
     // Initial fetch
     fetchSettings().then(() => {

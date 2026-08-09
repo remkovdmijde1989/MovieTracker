@@ -375,3 +375,30 @@
         .btn-back:hover {
             background: var(--hover-bg);
         }
+
+        /* Star Rating */
+        .star-rating {
+            display: inline-flex;
+            flex-direction: row-reverse;
+            justify-content: flex-end;
+            white-space: nowrap;
+        }
+        .star-rating .star {
+            cursor: pointer;
+            font-size: inherit;
+            color: var(--border-color);
+            transition: color 0.2s, transform 0.2s;
+            line-height: 1;
+            margin: 0 1px;
+        }
+        .star-rating .star:hover,
+        .star-rating .star:hover ~ .star {
+            color: var(--accent-blue) !important;
+            transform: scale(1.1);
+        }
+        .star-rating .star.filled {
+            color: var(--accent-blue);
+        }
+        .star-rating:hover .star.filled {
+            color: var(--border-color);
+        }
