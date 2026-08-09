@@ -5,7 +5,7 @@ A lightweight, modern web interface to track your watched movies and TV series a
 ## Quick Start
 Get up and running in seconds:
 1. **Download the app**: Click the green "Code" button at the top of this page, select "Download ZIP", and extract it to a folder on your computer.
-2. **Double-click the start script** for your OS (`start-windows.bat`, `start-macos.command`, or `start-linux.sh`) to launch the local server. Python 3 must be installed.
+2. **Double-click the start script** for your OS (`start-windows.bat`, `start-macos.command`, or `start-linux.sh`) to launch the local server. (Python 3 must be installed).
 3. **Open your browser** and navigate to `http://localhost:8080`.
 4. **Configure the app** by clicking the ⚙️ Settings icon in the top right to set your movie folder path and OMDb API key.
 
