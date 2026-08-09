@@ -18,13 +18,11 @@ A lightweight, modern web interface to track your watched movies and TV series a
 ## Screenshots
 
 <p align="center">
-  <a href="screenshots/dark_overview.png" target="_blank"><img src="screenshots/dark_overview.png" width="45%"></a>
   <a href="screenshots/light_overview.png" target="_blank"><img src="screenshots/light_overview.png" width="45%"></a>
+  <a href="screenshots/dark_overview.png" target="_blank"><img src="screenshots/dark_overview.png" width="45%"></a>
   <br>
   <a href="screenshots/dark_details.png" target="_blank"><img src="screenshots/dark_details.png" width="45%"></a>
-  <a href="screenshots/light_settings.png" target="_blank"><img src="screenshots/light_settings.png" width="45%"></a>
-  <br>
-  <a href="screenshots/dark_video.png" target="_blank"><img src="screenshots/dark_video.png" width="90%"></a>
+  <a href="screenshots/dark_video.png" target="_blank"><img src="screenshots/dark_video.png" width="45%"></a>
 </p>
 
 ---
