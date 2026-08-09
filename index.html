@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/styles.css">
+    
+</head>
+<body>
+
+<div class="container">
+    <div class="header">
+        <div>
+            <h1>🎬 Movie Tracker <span id="app-title-names"></span></h1>
+            <div id="app-tracking-path" style="margin-top: 5px; color: var(--text-muted); font-size: 0.9rem;">
+                Loading...
+            </div>
+        </div>
+        <div style="display: flex; align-items: center; gap: 1rem;">
+            <button class="theme-toggle" onclick="autoFetchAll()" title="Auto-Fetch Missing Ratings">🪄</button>
+            <button class="theme-toggle" onclick="showSettings()" title="Settings">⚙️</button>
+            <button class="theme-toggle" id="theme-toggle" onclick="toggleTheme()" title="Toggle Light/Dark Mode">🌙</button>
+        </div>
+    </div>
+
+    <div id="overview-view">
+        <div class="search-container">
+            <input type="text" id="searchInput" class="search-input" placeholder="Search by title or rating..." oninput="handleSearch(event)">
+        </div>
+
+        <table class="movie-table">
+            <thead>
+                <tr>
+                    <th class="col-title sortable" onclick="setSort('title')">Media <span class="sort-icon" id="sort-icon-title"></span></th>
+                    <th>Progress (S/E)</th>
+                    <th id="th-user1" style="text-align: center; display: none;" class="sortable" onclick="setSort('watched_remko')"><span id="header-user1"></span> <span class="sort-icon" id="sort-icon-watched_remko"></span></th>
+                    <th id="th-user2" style="text-align: center; display: none;" class="sortable" onclick="setSort('watched_mikaela')"><span id="header-user2"></span> <span class="sort-icon" id="sort-icon-watched_mikaela"></span></th>
+                    <th class="sortable" onclick="setSort('imdb')">IMDb Rating <span class="sort-icon" id="sort-icon-imdb"></span></th>
+                    <th class="sortable" onclick="setSort('rt_critics')">RT Critics <span class="sort-icon" id="sort-icon-rt_critics"></span></th>
+                    <th class="sortable" onclick="setSort('rt_audience')">RT Audience <span class="sort-icon" id="sort-icon-rt_audience"></span></th>
+                    <th class="sortable" onclick="setSort('rm_rating')"><span id="header-rm">Joint</span> Rating <span class="sort-icon" id="sort-icon-rm_rating"></span></th>
+                </tr>
+            </thead>
+            <tbody id="movie-tbody">
+                <tr>
+                    <td colspan="8" class="loader">Scanning volume for movies...</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div id="details-view" style="display: none;"></div>
+
+    <div id="settings-view" style="display: none; padding: 1rem 0;">
+        <button class="btn-back" onclick="hideSettings()">← Back</button>
+        <h2 style="margin-bottom: 2rem;">App Settings</h2>
+        
+        <div style="margin-bottom: 1.5rem;">
+            <label style="display:block; margin-bottom: 0.5rem; color: var(--text-muted);">Movies Folder Path</label>
+            <input type="text" id="setting-path" class="search-input" style="max-width: 500px;">
+        </div>
+        
+        <div style="margin-bottom: 1.5rem;">
+            <label style="display:block; margin-bottom: 0.5rem; color: var(--text-muted);">User 1 Name</label>
+            <input type="text" id="setting-user1" class="search-input" style="max-width: 300px;">
+        </div>
+        
+        <div style="margin-bottom: 2rem;">
+            <label style="display:block; margin-bottom: 0.5rem; color: var(--text-muted);">User 2 Name</label>
+            <input type="text" id="setting-user2" class="search-input" style="max-width: 300px;">
+        </div>
+
+        <div style="margin-bottom: 2rem; padding-top: 1rem; border-top: 1px solid var(--border-color);">
+            <label style="display:block; margin-bottom: 0.5rem; color: var(--text-muted);">OMDb API Key <span style="font-size: 0.8rem;">(Optional: For Auto-Fetching Ratings)</span></label>
+            <input type="text" id="setting-omdb" class="search-input" style="max-width: 300px;" placeholder="e.g. 1a2b3c4d">
+            <div style="font-size: 0.85rem; color: var(--text-muted); margin-top: 8px;">
+                Get a free key at <a href="http://www.omdbapi.com/apikey.aspx" target="_blank" style="color: var(--accent-blue); text-decoration: none;">omdbapi.com</a>
+            </div>
+        </div>
+        
+        <button class="btn-back" style="background: var(--accent-blue); color: white; border-color: transparent;" onclick="saveSettings()">Save Settings</button>
+    </div>
+</div>
+
+<div class="sync-status" id="sync-status">✓ Saved</div>
+
+<script src="/script.js"></script>
+
+
+</body>
+</html>

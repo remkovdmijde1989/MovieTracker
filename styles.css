@@ -1,0 +1,369 @@
+:root {
+            --bg-color: #0f1117;
+            --card-bg: rgba(30, 33, 44, 0.7);
+            --text-main: #f0f0f0;
+            --text-muted: #9ca3af;
+            
+            --accent-imdb: #f5c518;
+            --accent-rt-fresh: #fa320a;
+            --accent-rt-aud: #ff8b00;
+            --accent-success: #10b981;
+            --accent-blue: #3b82f6;
+            
+            --border-color: rgba(255, 255, 255, 0.1);
+            --hover-bg: rgba(40, 44, 58, 0.8);
+            
+            --input-bg: rgba(0, 0, 0, 0.3);
+            --input-hover-bg: rgba(255, 255, 255, 0.05);
+            --badge-bg: rgba(0, 0, 0, 0.2);
+            --badge-blue-bg: rgba(59, 130, 246, 0.2);
+            --strike-color: rgba(255, 255, 255, 0.2);
+        }
+
+        body.light-mode {
+            --bg-color: #f3f4f6;
+            --card-bg: #ffffff;
+            --text-main: #111827;
+            --text-muted: #6b7280;
+            
+            --border-color: rgba(0, 0, 0, 0.1);
+            --hover-bg: #f9fafb;
+            
+            --input-bg: #f3f4f6;
+            --input-hover-bg: rgba(0, 0, 0, 0.05);
+            --badge-bg: #f9fafb;
+            --badge-blue-bg: #eff6ff;
+            --strike-color: rgba(0, 0, 0, 0.2);
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            margin: 0;
+            padding: 2rem;
+            min-height: 100vh;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--border-color);
+            transition: border-color 0.3s;
+        }
+
+        .header h1 {
+            margin: 0;
+            font-size: 2.5rem;
+            background: linear-gradient(90deg, #ff4b2b, #ff416c);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .stats {
+            display: flex;
+            gap: 2rem;
+            font-size: 0.9rem;
+            color: var(--text-muted);
+        }
+
+        .stats-item strong {
+            color: var(--text-main);
+            font-size: 1.2rem;
+            display: block;
+        }
+
+        .movie-table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0 0.5rem;
+        }
+
+        .movie-table th {
+            text-align: left;
+            padding: 1rem;
+            color: var(--text-muted);
+            font-weight: 500;
+            text-transform: uppercase;
+            font-size: 0.85rem;
+            letter-spacing: 0.05em;
+            user-select: none;
+        }
+
+        .sortable {
+            cursor: pointer;
+            transition: color 0.2s;
+        }
+
+        .sortable:hover {
+            color: var(--text-main);
+        }
+
+        .sort-icon {
+            display: inline-block;
+            margin-left: 4px;
+            font-size: 0.8rem;
+            opacity: 0.5;
+        }
+        
+        .sort-icon.active {
+            opacity: 1;
+            color: var(--text-main);
+        }
+
+        .movie-table tbody tr {
+            background: var(--card-bg);
+            backdrop-filter: blur(10px);
+            transition: transform 0.2s, background 0.3s;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+        }
+
+        .movie-table tbody tr:hover {
+            transform: translateY(-2px);
+            background: var(--hover-bg);
+        }
+
+        .movie-table td {
+            padding: 1rem;
+            vertical-align: middle;
+        }
+
+        .movie-table tbody tr td:first-child {
+            border-top-left-radius: 12px;
+            border-bottom-left-radius: 12px;
+        }
+
+        .movie-table tbody tr td:last-child {
+            border-top-right-radius: 12px;
+            border-bottom-right-radius: 12px;
+        }
+
+        .col-title {
+            width: 35%;
+        }
+
+        .movie-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+            transition: color 0.3s;
+        }
+
+        .movie-meta {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+
+        .series-badge {
+            background: var(--badge-blue-bg);
+            color: var(--accent-blue);
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 0.7rem;
+            margin-right: 8px;
+            text-transform: uppercase;
+            font-weight: bold;
+            transition: background 0.3s;
+        }
+
+        /* Checkbox Styling */
+        .checkbox-wrapper {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .cyber-checkbox {
+            appearance: none;
+            width: 24px;
+            height: 24px;
+            border: 2px solid var(--border-color);
+            border-radius: 6px;
+            background: transparent;
+            cursor: pointer;
+            position: relative;
+            transition: all 0.3s cubic-bezier(0.4, 0.0, 0.2, 1);
+        }
+
+        .cyber-checkbox:checked {
+            background: var(--accent-success);
+            border-color: var(--accent-success);
+            box-shadow: 0 0 15px rgba(16, 185, 129, 0.3);
+        }
+
+        .cyber-checkbox:checked::after {
+            content: '✓';
+            position: absolute;
+            color: white;
+            font-size: 16px;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-weight: bold;
+        }
+
+        .watched-true .movie-title {
+            color: var(--text-muted);
+            text-decoration: line-through;
+            text-decoration-color: var(--strike-color);
+        }
+
+        /* Progress Inputs for Series */
+        .progress-container {
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+            font-size: 0.9rem;
+            color: var(--text-muted);
+        }
+
+        .progress-input {
+            background: var(--input-bg);
+            border: 1px solid var(--border-color);
+            color: var(--text-main);
+            border-radius: 4px;
+            width: 35px;
+            padding: 4px;
+            text-align: center;
+            font-family: inherit;
+            transition: all 0.3s;
+        }
+        
+        .progress-input:focus {
+            outline: none;
+            border-color: var(--accent-blue);
+            background: var(--card-bg);
+        }
+
+        /* Rating Badges */
+        .rating-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.4rem 0.75rem;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 0.95rem;
+            background: var(--badge-bg);
+            transition: background 0.3s;
+        }
+
+        .rating-imdb { color: var(--text-main); }
+        .rating-imdb span.icon { color: var(--accent-imdb); font-size: 1.2rem; }
+        
+        .rating-rt-critics span.icon { font-size: 1.2rem; }
+        .rating-rt-aud span.icon { font-size: 1.2rem; }
+
+        .loader {
+            text-align: center;
+            padding: 3rem;
+            color: var(--text-muted);
+        }
+
+        /* Editable inputs */
+        .rating-input {
+            background: transparent;
+            border: 1px dashed transparent;
+            color: inherit;
+            font-family: inherit;
+            font-size: inherit;
+            font-weight: inherit;
+            width: 50px;
+            padding: 2px;
+            text-align: center;
+            transition: all 0.2s;
+        }
+        
+        .rating-input:hover, .rating-input:focus {
+            border-color: var(--text-muted);
+            background: var(--input-hover-bg);
+            outline: none;
+            border-radius: 4px;
+        }
+
+        .theme-toggle {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            font-size: 1.2rem;
+            cursor: pointer;
+            padding: 0.5rem;
+            border-radius: 50%;
+            transition: all 0.3s;
+            color: var(--text-main);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        .theme-toggle:hover {
+            background: var(--hover-bg);
+            transform: scale(1.05);
+        }
+        
+        .search-container {
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+        }
+
+        .search-input {
+            width: 100%;
+            background: var(--input-bg);
+            border: 1px solid var(--border-color);
+            color: var(--text-main);
+            padding: 12px 20px;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: all 0.3s;
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: var(--accent-blue);
+            background: var(--card-bg);
+            box-shadow: 0 0 0 3px var(--badge-blue-bg);
+        }
+        
+        .sync-status {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: rgba(16, 185, 129, 0.15);
+            color: var(--accent-success);
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            opacity: 0;
+            transition: opacity 0.3s;
+            pointer-events: none;
+            backdrop-filter: blur(4px);
+            border: 1px solid rgba(16, 185, 129, 0.3);
+        }
+        
+        .sync-status.show {
+            opacity: 1;
+        }
+        
+        .btn-back {
+            background: var(--card-bg);
+            color: var(--text-main);
+            border: 1px solid var(--border-color);
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            cursor: pointer;
+            margin-bottom: 2rem;
+            transition: all 0.3s;
+        }
+        .btn-back:hover {
+            background: var(--hover-bg);
+        }
