@@ -2,6 +2,13 @@
 
 A lightweight, modern web interface to track your watched movies and TV series across different platforms. It scans a designated folder on your hard drive for video files and presents them in a beautiful, dynamic UI.
 
+## Quick Start
+Get up and running in seconds:
+1. **Clone the repo** to your local machine.
+2. **Double-click the start script** for your OS (`start-windows.bat`, `start-macos.command`, or `start-linux.sh`) to launch the local server. Python 3 must be installed.
+3. **Open your browser** and navigate to `http://localhost:8080`.
+4. **Configure the app** by clicking the ⚙️ Settings icon in the top right to set your movie folder path and OMDb API key.
+
 ## Features
 - **Cross-Platform**: Works out of the box on Windows, Mac, and Linux.
 - **In-App Settings**: Change the tracking folder path and custom usernames directly from the UI without touching the code.
@@ -12,8 +19,16 @@ A lightweight, modern web interface to track your watched movies and TV series a
 - **Smart Linking**: Manually search OMDb within the Details view and link movies to their exact official database IDs for perfect accuracy.
 - **Safe Saving**: Click into any field to edit; a small `💾` Save button appears (with a delayed auto-hide) so you never lose progress, or just hit `Enter` to quick-save.
 - **Series Tracking**: Automatically detects TV series, tracks seasons/episodes, and lists available episodes.
-- **Custom Joint Rating**: Assign a joint rating (R&M Rating) for any watched media.
+- **Custom Joint Rating**: Assign a joint rating (e.g., R&M Rating) for any watched media, which dynamically updates based on your names in Settings.
 - **Dark/Light Mode**: Toggle between premium dark and clean light mode.
+
+## Configuration & Settings
+
+You can customize the app at any time by clicking the gear icon (⚙️) in the top right corner. These settings update the app instantly without needing to touch any code:
+
+- **Movies Folder Path**: The absolute path to the directory where your media files are stored. The app scans this folder and all its subfolders for video files.
+- **User 1 Name & User 2 Name**: Personalize the tracker for two people. Updating these names instantly renames your progress checkbox columns and automatically updates the joint rating abbreviation across the app (e.g. changing Remko & Mikaela to John & Sarah automatically updates the `R&M Rating` header to `J&S Rating`).
+- **OMDb API Key**: (Optional) Add your personal API key from OMDb. This activates the Magic Wand auto-fetch tool and manual Smart Linking to seamlessly pull down official ratings and beautiful high-res posters for your library.
 
 ## Screenshots
 
