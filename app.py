@@ -114,6 +114,7 @@ def scan_movies():
                                         "rm_rating": "",
                                         "imdb": "N/A",
                                         "rt_critics": "N/A",
+                                        "poster": "",
                                         "season": "",
                                         "episode": "",
                                         "episodes_count": 0,
@@ -139,7 +140,8 @@ def scan_movies():
                                     "mapped_name": "",
                                     "rm_rating": "",
                                     "imdb": "N/A",
-                                    "rt_critics": "N/A"
+                                    "rt_critics": "N/A",
+                                    "poster": ""
                                 })
                     except OSError:
                         pass
@@ -173,6 +175,66 @@ class RequestHandler(BaseHTTPRequestHandler):
         if parsed_path.path == '/api/movies':
             movies = scan_movies()
             self._send_response(json.dumps(movies))
+        elif parsed_path.path == '/api/video':
+            import urllib.parse
+            query = urllib.parse.parse_qs(parsed_path.query)
+            if 'path' in query:
+                filepath = query['path'][0]
+                if os.path.exists(filepath):
+                    file_size = os.path.getsize(filepath)
+                    import mimetypes
+                    mime_type, _ = mimetypes.guess_type(filepath)
+                    if not mime_type:
+                        mime_type = 'video/mp4'
+                    
+                    range_header = self.headers.get('Range', None)
+                    if range_header:
+                        import re
+                        m = re.search(r'bytes=(\d+)-(\d*)', range_header)
+                        if m:
+                            start = int(m.group(1))
+                            end = m.group(2)
+                            if end:
+                                end = int(end)
+                            else:
+                                end = file_size - 1
+                            
+                            length = end - start + 1
+                            self.send_response(206)
+                            self.send_header('Content-Type', mime_type)
+                            self.send_header('Content-Length', str(length))
+                            self.send_header('Accept-Ranges', 'bytes')
+                            self.send_header('Content-Range', f'bytes {start}-{end}/{file_size}')
+                            self.end_headers()
+                            
+                            try:
+                                with open(filepath, 'rb') as f:
+                                    f.seek(start)
+                                    remaining = length
+                                    chunk_size = 8192
+                                    while remaining > 0:
+                                        chunk = f.read(min(chunk_size, remaining))
+                                        if not chunk: break
+                                        self.wfile.write(chunk)
+                                        remaining -= len(chunk)
+                            except (ConnectionResetError, BrokenPipeError):
+                                pass
+                            return
+                    
+                    self.send_response(200)
+                    self.send_header('Content-Type', mime_type)
+                    self.send_header('Content-Length', str(file_size))
+                    self.send_header('Accept-Ranges', 'bytes')
+                    self.end_headers()
+                    try:
+                        with open(filepath, 'rb') as f:
+                            import shutil
+                            shutil.copyfileobj(f, self.wfile)
+                    except (ConnectionResetError, BrokenPipeError):
+                        pass
+                    return
+            self.send_response(404)
+            self.end_headers()
         elif parsed_path.path == '/api/settings':
             settings = get_settings()
             self._send_response(json.dumps(settings))
@@ -224,7 +286,7 @@ class RequestHandler(BaseHTTPRequestHandler):
                 if item_id not in db:
                     db[item_id] = {}
                 
-                for k in ['watched', 'watched_remko', 'watched_mikaela', 'mapped_name', 'rm_rating', 'imdb', 'rt_critics', 'title', 'season', 'episode', 'imdb_id']:
+                for k in ['watched', 'watched_remko', 'watched_mikaela', 'mapped_name', 'rm_rating', 'imdb', 'rt_critics', 'poster', 'title', 'season', 'episode', 'imdb_id']:
                     if k in data:
                         db[item_id][k] = data[k]
                 
@@ -278,6 +340,10 @@ class RequestHandler(BaseHTTPRequestHandler):
                         for rating in omdb_data.get('Ratings', []):
                             if rating['Source'] == 'Rotten Tomatoes':
                                 updates['rt_critics'] = rating['Value'].replace('%', '')
+                        
+                        poster = omdb_data.get('Poster')
+                        if poster:
+                            updates['poster'] = poster
                         
                         if updates:
                             db = load_db()

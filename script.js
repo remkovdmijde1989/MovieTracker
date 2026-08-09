@@ -169,7 +169,7 @@ let rawMoviesData = [];
         if (btn) btn.innerText = '⏳';
         
         for (const item of rawMoviesData) {
-            if (item.type === 'movie' && (item.imdb === 'N/A' || item.rt_critics === 'N/A')) {
+            if (item.imdb === 'N/A' || item.rt_critics === 'N/A' || item.poster === '') {
                 try {
                     const displayTitle = item.mapped_name || item.title;
                     const res = await fetch('/api/movies/fetch_ratings', {
@@ -381,19 +381,27 @@ let rawMoviesData = [];
         document.getElementById('overview-view').style.display = 'none';
         
         const displayTitle = item.mapped_name || item.title;
+        const hasPoster = item.poster && item.poster !== 'N/A';
+        const posterHtmlLarge = hasPoster 
+            ? `<img src="${item.poster}" alt="Poster" onerror="handlePosterError(this, 'large')" style="width: 250px; border-radius: 12px; box-shadow: 0 8px 24px rgba(0,0,0,0.4); flex-shrink: 0;">` 
+            : `<div style="width: 250px; height: 375px; background: var(--surface-light); border: 1px solid var(--border-color); border-radius: 12px; display: flex; align-items: center; justify-content: center; color: var(--text-muted); flex-shrink: 0; box-shadow: 0 8px 24px rgba(0,0,0,0.4);">No Poster</div>`;
+        
         let detailsHtml = `
             <button class="btn-back" onclick="hideDetails()">← Back to Overview</button>
-            <h2 style="font-size: 2.5rem; margin-bottom: 0.5rem;">${displayTitle}</h2>
-            
-            <div style="margin-bottom: 2rem;">
-                <label style="color: var(--text-muted); font-size: 0.85rem; display: block; margin-bottom: 0.25rem;">Mapped Name (override):</label>
-                <input type="text" id="mapped-name-input" value="${item.mapped_name || ''}" class="search-input" style="width: 300px; padding: 6px; font-size: 0.9rem;"
-                    placeholder="Enter clean name..."
-                    onfocus="handleInputFocus(this, '${item.id.replace(/'/g, "\\'")}', 'mapped_name', true)"
-                    onblur="handleInputBlur(this)"
-                    onkeydown="if(event.key==='Enter') { this.nextElementSibling?.click(); this.blur(); }">
-                <span id="save-status-${item.id.replace(/[^a-zA-Z0-9]/g, '')}" style="color: var(--accent-success); margin-left: 10px; opacity: 0; transition: opacity 0.3s;">✓ Saved</span>
-            </div>
+            <div style="display: flex; gap: 2rem; align-items: flex-start; margin-top: 1.5rem;">
+                ${posterHtmlLarge}
+                <div style="flex: 1; min-width: 0;">
+                    <h2 style="font-size: 2.5rem; margin-bottom: 0.5rem; margin-top: 0;">${displayTitle}</h2>
+                    
+                    <div style="margin-bottom: 2rem;">
+                        <label style="color: var(--text-muted); font-size: 0.85rem; display: block; margin-bottom: 0.25rem;">Mapped Name (override):</label>
+                        <input type="text" id="mapped-name-input" value="${item.mapped_name || ''}" class="search-input" style="width: 300px; padding: 6px; font-size: 0.9rem;"
+                            placeholder="Enter clean name..."
+                            onfocus="handleInputFocus(this, '${item.id.replace(/'/g, "\\'")}', 'mapped_name', true)"
+                            onblur="handleInputBlur(this)"
+                            onkeydown="if(event.key==='Enter') { this.nextElementSibling?.click(); this.blur(); }">
+                        <span id="save-status-${item.id.replace(/[^a-zA-Z0-9]/g, '')}" style="color: var(--accent-success); margin-left: 10px; opacity: 0; transition: opacity 0.3s;">✓ Saved</span>
+                    </div>
             
             ${item.type === 'movie' ? `
             <div style="margin-bottom: 2rem;">
@@ -429,7 +437,7 @@ let rawMoviesData = [];
                         onkeydown="if(event.key==='Enter') { this.nextElementSibling?.click(); this.blur(); }" placeholder="N/A">
                 </div>
                 <div class="rating-badge rating-rt-critics">
-                    <span class="icon">🍅</span>
+                    <span class="icon">${(item.rt_critics === 'N/A' || item.rt_critics === '') ? '<span style="filter: grayscale(1); opacity: 0.5;">🍅</span>' : (parseInt(item.rt_critics) >= 60 ? '🍅' : '🤢')}</span>
                     <input type="text" class="rating-input" style="width: 40px; background: transparent; border: 1px solid transparent; color: inherit; font-size: inherit; text-align: center;" value="${item.rt_critics !== 'N/A' ? item.rt_critics : ''}" 
                         onfocus="handleInputFocus(this, '${item.id.replace(/'/g, "\\'")}', 'rt_critics')" 
                         onblur="handleInputBlur(this)"
@@ -463,6 +471,21 @@ let rawMoviesData = [];
             });
             detailsHtml += `</ul>`;
         }
+        
+        if (item.type === 'movie' && item.filepath) {
+            const videoUrl = `/api/video?path=${encodeURIComponent(item.filepath)}`;
+            detailsHtml += `
+            <div style="margin-top: 3rem; border-top: 1px solid var(--border-color); padding-top: 2rem;">
+                <h3 style="margin-bottom: 1rem; color: var(--text-color);">Video Preview</h3>
+                <video controls width="100%" style="background: black; border-radius: 8px; max-height: 50vh;" preload="metadata">
+                    <source src="${videoUrl}" type="video/mp4">
+                    Your browser does not support the video tag.
+                </video>
+            </div>
+            `;
+        }
+        
+        detailsHtml += `</div></div>`; // Close the flex container and flex: 1 wrapper
         
         document.getElementById('details-view').innerHTML = detailsHtml;
         document.getElementById('details-view').style.display = 'block';
@@ -533,6 +556,14 @@ let rawMoviesData = [];
         });
     }
 
+    window.handlePosterError = function(imgElement, size) {
+        if (size === 'small') {
+            imgElement.outerHTML = `<div style="height: 45px; width: 30px; background: var(--surface-light); border: 1px solid var(--border-color); border-radius: 4px; display: flex; align-items: center; justify-content: center; color: var(--text-muted); font-size: 0.6rem; text-align: center; margin-right: 12px; box-sizing: border-box; line-height: 1;">N/A</div>`;
+        } else {
+            imgElement.outerHTML = `<div style="width: 250px; height: 375px; background: var(--surface-light); border: 1px solid var(--border-color); border-radius: 12px; display: flex; align-items: center; justify-content: center; color: var(--text-muted); flex-shrink: 0; box-shadow: 0 8px 24px rgba(0,0,0,0.4);">No Poster</div>`;
+        }
+    };
+
     function renderMovies() {
         updateSortIcons();
         const tbody = document.getElementById('movie-tbody');
@@ -556,10 +587,19 @@ let rawMoviesData = [];
             const subtext = isTv ? `${item.episodes_count} episodes found` : item.filename;
             
             const displayTitle = item.mapped_name || item.title;
+            const hasPoster = item.poster && item.poster !== 'N/A';
+            const posterHtmlSmall = hasPoster 
+                ? `<img src="${item.poster}" alt="poster" onerror="handlePosterError(this, 'small')" style="height: 45px; width: 30px; border-radius: 4px; object-fit: cover; margin-right: 12px; box-shadow: 0 2px 4px rgba(0,0,0,0.2);">` 
+                : `<div style="height: 45px; width: 30px; background: var(--surface-light); border: 1px solid var(--border-color); border-radius: 4px; display: flex; align-items: center; justify-content: center; color: var(--text-muted); font-size: 0.6rem; text-align: center; margin-right: 12px; box-sizing: border-box; line-height: 1;">N/A</div>`;
             
             tdTitle.innerHTML = `
-                <div class="movie-title" style="cursor:pointer;" onclick="showDetails('${item.id.replace(/'/g, "\\'")}')" title="View Details">${badge}${displayTitle}</div>
-                <div class="movie-meta">${subtext}</div>
+                <div style="display: flex; align-items: center; cursor:pointer;" onclick="showDetails('${item.id.replace(/'/g, "\\'")}')" title="View Details">
+                    ${posterHtmlSmall}
+                    <div style="min-width: 0;">
+                        <div class="movie-title">${badge}${displayTitle}</div>
+                        <div class="movie-meta">${subtext}</div>
+                    </div>
+                </div>
             `;
             tr.appendChild(tdTitle);
 
@@ -629,12 +669,14 @@ let rawMoviesData = [];
 
             // RT Critics Col
             const tdRtCritics = document.createElement('td');
-            const isFresh = item.rt_critics !== 'N/A' && parseInt(item.rt_critics) >= 60;
             const rtSearchUrl = `https://www.rottentomatoes.com/search?search=${encodeURIComponent(item.title)}`;
+            const isNa = item.rt_critics === 'N/A' || item.rt_critics === '';
+            const isFresh = !isNa && parseInt(item.rt_critics) >= 60;
+            const rtIcon = isNa ? '<span style="filter: grayscale(1); opacity: 0.5;">🍅</span>' : (isFresh ? '🍅' : '🤢');
             tdRtCritics.innerHTML = `
                 <div class="rating-badge rating-rt-critics">
                     <a href="${rtSearchUrl}" target="_blank" title="Search on Rotten Tomatoes" style="text-decoration: none;">
-                        <span class="icon" style="cursor: pointer;">${isFresh ? '🍅' : '🤢'}</span>
+                        <span class="icon" style="cursor: pointer;">${rtIcon}</span>
                     </a>
                     <input type="text" class="rating-input" style="width: 40px; background: transparent; border: 1px solid transparent; color: inherit; font-size: inherit; text-align: center;" value="${item.rt_critics !== 'N/A' ? item.rt_critics : ''}" 
                         onfocus="handleInputFocus(this, '${item.id.replace(/'/g, "\\'")}', 'rt_critics')" 

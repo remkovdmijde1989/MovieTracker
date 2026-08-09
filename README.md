@@ -6,7 +6,9 @@ A lightweight, modern web interface to track your watched movies and TV series a
 - **Cross-Platform**: Works out of the box on Windows, Mac, and Linux.
 - **In-App Settings**: Change the tracking folder path and custom usernames directly from the UI without touching the code.
 - **Details View**: Click any title to see its IMDb and Rotten Tomatoes ratings, plus an editable custom canonical name.
+- **Video Previews**: Play and scrub through movie files directly within the browser using the built-in video player in the details view.
 - **Auto-Fetch Ratings**: Connect a free OMDb API key in Settings to instantly fetch missing IMDb and Rotten Tomatoes ratings with the Magic Wand button.
+- **Movie & Series Posters**: Automatically downloads high-resolution cover art from OMDb, displaying sleek thumbnails in the main list and full posters in the details view.
 - **Smart Linking**: Manually search OMDb within the Details view and link movies to their exact official database IDs for perfect accuracy.
 - **Safe Saving**: Click into any field to edit; a small `💾` Save button appears (with a delayed auto-hide) so you never lose progress, or just hit `Enter` to quick-save.
 - **Series Tracking**: Automatically detects TV series, tracks seasons/episodes, and lists available episodes.
@@ -19,8 +21,10 @@ A lightweight, modern web interface to track your watched movies and TV series a
   <a href="screenshots/dark_overview.png" target="_blank"><img src="screenshots/dark_overview.png" width="45%"></a>
   <a href="screenshots/light_overview.png" target="_blank"><img src="screenshots/light_overview.png" width="45%"></a>
   <br>
-  <a href="screenshots/dark_settings.png" target="_blank"><img src="screenshots/dark_settings.png" width="45%"></a>
-  <a href="screenshots/light_details.png" target="_blank"><img src="screenshots/light_details.png" width="45%"></a>
+  <a href="screenshots/dark_details.png" target="_blank"><img src="screenshots/dark_details.png" width="45%"></a>
+  <a href="screenshots/light_settings.png" target="_blank"><img src="screenshots/light_settings.png" width="45%"></a>
+  <br>
+  <a href="screenshots/dark_video.png" target="_blank"><img src="screenshots/dark_video.png" width="90%"></a>
 </p>
 
 ---
