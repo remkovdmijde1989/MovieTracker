@@ -13,6 +13,16 @@ A lightweight, modern web interface to track your watched movies and TV series a
 - **Custom Joint Rating**: Assign a joint rating (R&M Rating) for any watched media.
 - **Dark/Light Mode**: Toggle between premium dark and clean light mode.
 
+## Screenshots
+
+<p align="center">
+  <a href="screenshots/dark_overview.png" target="_blank"><img src="screenshots/dark_overview.png" width="45%"></a>
+  <a href="screenshots/light_overview.png" target="_blank"><img src="screenshots/light_overview.png" width="45%"></a>
+  <br>
+  <a href="screenshots/dark_settings.png" target="_blank"><img src="screenshots/dark_settings.png" width="45%"></a>
+  <a href="screenshots/light_details.png" target="_blank"><img src="screenshots/light_details.png" width="45%"></a>
+</p>
+
 ---
 
 ## Prerequisites

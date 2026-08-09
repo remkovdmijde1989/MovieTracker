@@ -114,7 +114,6 @@ def scan_movies():
                                         "rm_rating": "",
                                         "imdb": "N/A",
                                         "rt_critics": "N/A",
-                                        "rt_audience": "N/A",
                                         "season": "",
                                         "episode": "",
                                         "episodes_count": 0,
@@ -140,8 +139,7 @@ def scan_movies():
                                     "mapped_name": "",
                                     "rm_rating": "",
                                     "imdb": "N/A",
-                                    "rt_critics": "N/A",
-                                    "rt_audience": "N/A"
+                                    "rt_critics": "N/A"
                                 })
                     except OSError:
                         pass
@@ -226,7 +224,7 @@ class RequestHandler(BaseHTTPRequestHandler):
                 if item_id not in db:
                     db[item_id] = {}
                 
-                for k in ['watched', 'watched_remko', 'watched_mikaela', 'mapped_name', 'rm_rating', 'imdb', 'rt_critics', 'rt_audience', 'title', 'season', 'episode', 'imdb_id']:
+                for k in ['watched', 'watched_remko', 'watched_mikaela', 'mapped_name', 'rm_rating', 'imdb', 'rt_critics', 'title', 'season', 'episode', 'imdb_id']:
                     if k in data:
                         db[item_id][k] = data[k]
                 
@@ -327,6 +325,7 @@ class RequestHandler(BaseHTTPRequestHandler):
                         return
             except Exception as e:
                 print("OMDb Search Error:", e)
+                self._send_response(json.dumps({"error": str(e)}), status=500)
                 
             self._send_response(json.dumps({"error": "Failed to search"}), status=500)
         else:

@@ -281,11 +281,17 @@ let rawMoviesData = [];
         showDetails(id);
     }
 
-    async function searchOmdb(id, title) {
+    async function searchOmdb(id, fallbackTitle) {
         if (!appSettings.omdb_api_key) {
             alert("Please set an OMDb API Key in Settings first.");
             return;
         }
+        let searchTitle = fallbackTitle;
+        const mappedInput = document.getElementById('mapped-name-input');
+        if (mappedInput && mappedInput.value.trim() !== '') {
+            searchTitle = mappedInput.value.trim();
+        }
+
         const resultsDiv = document.getElementById('omdb-results');
         resultsDiv.style.display = 'block';
         resultsDiv.innerHTML = 'Searching...';
@@ -294,7 +300,7 @@ let rawMoviesData = [];
             const res = await fetch('/api/movies/search_omdb', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ title })
+                body: JSON.stringify({ title: searchTitle })
             });
             const data = await res.json();
             if (res.ok && data.results) {
@@ -381,7 +387,7 @@ let rawMoviesData = [];
             
             <div style="margin-bottom: 2rem;">
                 <label style="color: var(--text-muted); font-size: 0.85rem; display: block; margin-bottom: 0.25rem;">Mapped Name (override):</label>
-                <input type="text" value="${item.mapped_name || ''}" class="search-input" style="width: 300px; padding: 6px; font-size: 0.9rem;"
+                <input type="text" id="mapped-name-input" value="${item.mapped_name || ''}" class="search-input" style="width: 300px; padding: 6px; font-size: 0.9rem;"
                     placeholder="Enter clean name..."
                     onfocus="handleInputFocus(this, '${item.id.replace(/'/g, "\\'")}', 'mapped_name', true)"
                     onblur="handleInputBlur(this)"
@@ -427,14 +433,7 @@ let rawMoviesData = [];
                     <input type="text" class="rating-input" style="width: 40px; background: transparent; border: 1px solid transparent; color: inherit; font-size: inherit; text-align: center;" value="${item.rt_critics !== 'N/A' ? item.rt_critics : ''}" 
                         onfocus="handleInputFocus(this, '${item.id.replace(/'/g, "\\'")}', 'rt_critics')" 
                         onblur="handleInputBlur(this)"
-                        onkeydown="if(event.key==='Enter') { this.nextElementSibling?.click(); this.blur(); }" placeholder="N/A">
-                </div>
-                <div class="rating-badge rating-rt-aud">
-                    <span class="icon">🍿</span>
-                    <input type="text" class="rating-input" style="width: 40px; background: transparent; border: 1px solid transparent; color: inherit; font-size: inherit; text-align: center;" value="${item.rt_audience !== 'N/A' ? item.rt_audience : ''}" 
-                        onfocus="handleInputFocus(this, '${item.id.replace(/'/g, "\\'")}', 'rt_audience')" 
-                        onblur="handleInputBlur(this)"
-                        onkeydown="if(event.key==='Enter') { this.nextElementSibling?.click(); this.blur(); }" placeholder="N/A">
+                        onkeydown="if(event.key==='Enter') this.blur();">
                 </div>
                 <div class="rating-badge">
                     <span style="opacity: 0.7; margin-right: 5px;">${appSettings.user1_name[0] || 'U1'}&${appSettings.user2_name[0] || 'U2'}:</span> 
@@ -499,12 +498,12 @@ let rawMoviesData = [];
         if (searchQuery) {
             filteredData = filteredData.filter(item => {
                 const searchTitle = item.mapped_name || item.title;
-                const titleMatch = (searchTitle || '').toLowerCase().includes(searchQuery);
+                const titleMatch = searchTitle.toLowerCase().includes(searchQuery);
                 const imdbMatch = (item.imdb || '').toLowerCase().includes(searchQuery);
                 const rtCriticsMatch = (item.rt_critics || '').toLowerCase().includes(searchQuery);
-                const rtAudMatch = (item.rt_audience || '').toLowerCase().includes(searchQuery);
-                const rmMatch = (item.rm_rating || '').toLowerCase().includes(searchQuery);
-                return titleMatch || imdbMatch || rtCriticsMatch || rtAudMatch || rmMatch;
+                const typeMatch = (item.type || '').toLowerCase().includes(searchQuery);
+                
+                return titleMatch || imdbMatch || rtCriticsMatch || typeMatch;
             });
         }
 
@@ -644,23 +643,6 @@ let rawMoviesData = [];
                 </div>
             `;
             tr.appendChild(tdRtCritics);
-
-            // RT Audience Col
-            const tdRtAud = document.createElement('td');
-            const isPopcorn = item.rt_audience !== 'N/A' && parseInt(item.rt_audience) >= 60;
-            tdRtAud.innerHTML = `
-                <div class="rating-badge rating-rt-aud">
-                    <a href="${rtSearchUrl}" target="_blank" title="Search on Rotten Tomatoes" style="text-decoration: none;">
-                        <span class="icon" style="cursor: pointer;">${isPopcorn ? '🍿' : '🍿'}</span>
-                    </a>
-                    <input type="text" class="rating-input" style="width: 40px; background: transparent; border: 1px solid transparent; color: inherit; font-size: inherit; text-align: center;" value="${item.rt_audience !== 'N/A' ? item.rt_audience : ''}" 
-                        onfocus="handleInputFocus(this, '${item.id.replace(/'/g, "\\'")}', 'rt_audience')" 
-                        onblur="handleInputBlur(this)"
-                        onkeydown="if(event.key==='Enter') { this.nextElementSibling?.click(); this.blur(); }" placeholder="N/A">
-                </div>
-            `;
-            tr.appendChild(tdRtAud);
-
             // R&M Rating Col
             const tdRmRating = document.createElement('td');
             tdRmRating.innerHTML = `
