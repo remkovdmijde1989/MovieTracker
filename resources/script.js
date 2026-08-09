@@ -277,8 +277,11 @@ let rawMoviesData = [];
     }
 
     async function unlinkOmdb(id) {
-        await updateData(id, { 'imdb_id': '' });
-        showDetails(id);
+        if(confirm("Are you sure you want to unlink this OMDb item? This will remove all OMDb ratings and data.")) {
+            await updateData(id, { 'imdb_id': '', 'imdb': '', 'rt_critics': '', 'poster': '', 'plot': '', 'genre': '' });
+            showDetails(id);
+            renderMovies();
+        }
     }
 
     async function searchOmdb(id, fallbackTitle) {
@@ -392,6 +395,10 @@ let rawMoviesData = [];
                 ${posterHtmlLarge}
                 <div style="flex: 1; min-width: 0;">
                     <h2 style="font-size: 2.5rem; margin-bottom: 0.5rem; margin-top: 0;">${displayTitle}</h2>
+                    
+                    ${item.genre && item.genre !== 'N/A' ? `<div style="color: var(--accent-blue); font-weight: 500; font-size: 0.95rem; margin-bottom: 1rem; letter-spacing: 0.5px;">${item.genre}</div>` : ''}
+                    
+                    ${item.plot && item.plot !== 'N/A' ? `<div style="color: var(--text-color); line-height: 1.6; font-size: 1rem; margin-bottom: 2rem; background: var(--hover-bg); padding: 1.2rem; border-radius: 8px; border-left: 4px solid var(--accent-blue); box-shadow: 0 2px 8px rgba(0,0,0,0.1);">${item.plot}</div>` : ''}
                     
                     <div style="margin-bottom: 2rem;">
                         <label style="color: var(--text-muted); font-size: 0.85rem; display: block; margin-bottom: 0.25rem;">Mapped Name (override):</label>

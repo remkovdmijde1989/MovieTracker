@@ -344,6 +344,14 @@ class RequestHandler(BaseHTTPRequestHandler):
                         poster = omdb_data.get('Poster')
                         if poster:
                             updates['poster'] = poster
+                            
+                        plot = omdb_data.get('Plot', 'N/A')
+                        if plot != 'N/A':
+                            updates['plot'] = plot
+                            
+                        genre = omdb_data.get('Genre', 'N/A')
+                        if genre != 'N/A':
+                            updates['genre'] = genre
                         
                         if updates:
                             db = load_db()
