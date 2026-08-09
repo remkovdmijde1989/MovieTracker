@@ -481,11 +481,13 @@ let rawMoviesData = [];
         
         if (item.type === 'movie' && item.filepath) {
             const videoUrl = `/api/video?path=${encodeURIComponent(item.filepath)}`;
+            const trackHtml = item.subtitle_path ? `<track src="/api/subtitle?path=${encodeURIComponent(item.subtitle_path)}" kind="subtitles" srclang="en" label="English" default>` : '';
             detailsHtml += `
             <div style="margin-top: 3rem; border-top: 1px solid var(--border-color); padding-top: 2rem;">
                 <h3 style="margin-bottom: 1rem; color: var(--text-color);">Video Preview</h3>
                 <video controls width="100%" style="background: black; border-radius: 8px; max-height: 50vh;" preload="metadata">
                     <source src="${videoUrl}" type="video/mp4">
+                    ${trackHtml}
                     Your browser does not support the video tag.
                 </video>
             </div>

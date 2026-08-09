@@ -100,6 +100,9 @@ def scan_movies():
                             rel_dir = os.path.relpath(root, volume_path)
                             series_title, s, e = get_series_info(rel_dir, f)
                             
+                            subtitle_path = os.path.splitext(full_path)[0] + '.srt'
+                            has_subtitle = os.path.exists(subtitle_path)
+                            
                             if series_title:
                                 series_id = f"series:{series_title}"
                                 if series_id not in series_dict:
@@ -125,7 +128,8 @@ def scan_movies():
                                     "filename": f,
                                     "filepath": full_path,
                                     "season": s,
-                                    "episode": e
+                                    "episode": e,
+                                    "subtitle_path": subtitle_path if has_subtitle else ""
                                 })
                             else:
                                 movies_list.append({
@@ -141,7 +145,8 @@ def scan_movies():
                                     "rm_rating": "",
                                     "imdb": "N/A",
                                     "rt_critics": "N/A",
-                                    "poster": ""
+                                    "poster": "",
+                                    "subtitle_path": subtitle_path if has_subtitle else ""
                                 })
                     except OSError:
                         pass
@@ -232,6 +237,23 @@ class RequestHandler(BaseHTTPRequestHandler):
                             shutil.copyfileobj(f, self.wfile)
                     except (ConnectionResetError, BrokenPipeError):
                         pass
+                    return
+            self.send_response(404)
+            self.end_headers()
+        elif parsed_path.path == '/api/subtitle':
+            import urllib.parse
+            query = urllib.parse.parse_qs(parsed_path.query)
+            if 'path' in query:
+                filepath = query['path'][0]
+                if os.path.exists(filepath):
+                    with open(filepath, 'r', encoding='utf-8', errors='replace') as f:
+                        srt_content = f.read()
+                    vtt_content = "WEBVTT\n\n" + srt_content.replace(',', '.')
+                    self.send_response(200)
+                    self.send_header('Content-Type', 'text/vtt')
+                    self.send_header('Access-Control-Allow-Origin', '*')
+                    self.end_headers()
+                    self.wfile.write(vtt_content.encode('utf-8'))
                     return
             self.send_response(404)
             self.end_headers()
