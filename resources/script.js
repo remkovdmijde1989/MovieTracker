@@ -171,7 +171,7 @@ let rawMoviesData = [];
         if (btn) btn.innerText = '⏳';
         
         for (const item of rawMoviesData) {
-            if (item.imdb === 'N/A' || item.rt_critics === 'N/A' || item.poster === '') {
+            if (item.imdb === 'N/A' || item.rt_critics === 'N/A' || item.poster === '' || !item.director || !item.actors) {
                 try {
                     const displayTitle = item.mapped_name || item.title;
                     const res = await fetch('/api/movies/fetch_ratings', {
@@ -281,7 +281,7 @@ let rawMoviesData = [];
 
     async function unlinkOmdb(id) {
         if(confirm("Are you sure you want to unlink this OMDb item? This will remove all OMDb ratings and data.")) {
-            await updateData(id, { 'imdb_id': '', 'imdb': '', 'rt_critics': '', 'poster': '', 'plot': '', 'genre': '' });
+            await updateData(id, { 'imdb_id': '', 'imdb': '', 'rt_critics': '', 'poster': '', 'plot': '', 'genre': '', 'director': '', 'actors': '' });
             showDetails(id);
             renderMovies();
         }
@@ -402,7 +402,13 @@ let rawMoviesData = [];
                     
                     ${item.genre && item.genre !== 'N/A' ? `<div style="color: var(--accent-blue); font-weight: 500; font-size: 0.95rem; margin-bottom: 1rem; letter-spacing: 0.5px;">${item.genre}</div>` : ''}
                     
-                    ${item.plot && item.plot !== 'N/A' ? `<div style="color: var(--text-color); line-height: 1.6; font-size: 1rem; margin-bottom: 2rem; background: var(--hover-bg); padding: 1.2rem; border-radius: 8px; border-left: 4px solid var(--accent-blue); box-shadow: 0 2px 8px rgba(0,0,0,0.1);">${item.plot}</div>` : ''}
+                    ${item.plot && item.plot !== 'N/A' ? `<div style="color: var(--text-color); line-height: 1.6; font-size: 1rem; margin-bottom: 1.5rem; background: var(--hover-bg); padding: 1.2rem; border-radius: 8px; border-left: 4px solid var(--accent-blue); box-shadow: 0 2px 8px rgba(0,0,0,0.1);">${item.plot}</div>` : ''}
+                    
+                    ${(item.director && item.director !== 'N/A') || (item.actors && item.actors !== 'N/A') ? `
+                    <div style="margin-bottom: 2rem; display: flex; flex-direction: column; gap: 0.5rem; font-size: 0.95rem;">
+                        ${item.director && item.director !== 'N/A' ? `<div><strong style="color: var(--text-muted); width: 80px; display: inline-block;">Director:</strong> <span style="color: var(--text-color);">${item.director}</span></div>` : ''}
+                        ${item.actors && item.actors !== 'N/A' ? `<div><strong style="color: var(--text-muted); width: 80px; display: inline-block;">Cast:</strong> <span style="color: var(--text-color);">${item.actors}</span></div>` : ''}
+                    </div>` : ''}
                     
                     <div style="margin-bottom: 2rem;">
                         <label style="color: var(--text-muted); font-size: 0.85rem; display: block; margin-bottom: 0.25rem;">Mapped Name (override):</label>

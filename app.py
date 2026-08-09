@@ -374,6 +374,14 @@ class RequestHandler(BaseHTTPRequestHandler):
                         genre = omdb_data.get('Genre', 'N/A')
                         if genre != 'N/A':
                             updates['genre'] = genre
+                            
+                        director = omdb_data.get('Director', 'N/A')
+                        if director != 'N/A':
+                            updates['director'] = director
+                            
+                        actors = omdb_data.get('Actors', 'N/A')
+                        if actors != 'N/A':
+                            updates['actors'] = actors
                         
                         if updates:
                             db = load_db()
