@@ -7,8 +7,8 @@ import threading
 import webbrowser
 
 PORT = 8080
-DB_FILE = "db.json"
-SETTINGS_FILE = "settings.json"
+DB_FILE = "resources/db.json"
+SETTINGS_FILE = "resources/settings.json"
 
 def load_db():
     if os.path.exists(DB_FILE):
@@ -240,20 +240,20 @@ class RequestHandler(BaseHTTPRequestHandler):
             self._send_response(json.dumps(settings))
         elif parsed_path.path == '/':
             try:
-                with open('index.html', 'r') as f:
+                with open('resources/index.html', 'r') as f:
                     self._send_response(f.read(), content_type='text/html')
             except FileNotFoundError:
                 self._send_response("index.html not found", status=404, content_type="text/plain")
         elif parsed_path.path == '/styles.css':
             try:
-                with open('styles.css', 'r') as f:
+                with open('resources/styles.css', 'r') as f:
                     self._send_response(f.read(), content_type='text/css')
             except FileNotFoundError:
                 self.send_response(404)
                 self.end_headers()
         elif parsed_path.path == '/script.js':
             try:
-                with open('script.js', 'r') as f:
+                with open('resources/script.js', 'r') as f:
                     self._send_response(f.read(), content_type='application/javascript')
             except FileNotFoundError:
                 self.send_response(404)
