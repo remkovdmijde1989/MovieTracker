@@ -3,6 +3,7 @@ let rawMoviesData = [];
     let isEditing = false;
     let sortField = 'title';
     let sortAscending = true;
+    let hideWatched = false;
     let searchQuery = '';
 
     function showSaveButton(input, id, field, isMappedName = false) {
@@ -538,6 +539,14 @@ let rawMoviesData = [];
                 return titleMatch || imdbMatch || rtCriticsMatch || typeMatch;
             });
         }
+        
+        if (hideWatched) {
+            filteredData = filteredData.filter(item => {
+                const u1 = appSettings.user1_name ? item.watched_remko : true;
+                const u2 = appSettings.user2_name ? item.watched_mikaela : true;
+                return !(appSettings.user1_name || appSettings.user2_name ? (u1 && u2) : item.watched);
+            });
+        }
 
         return filteredData.sort((a, b) => {
             let valA, valB;
@@ -574,6 +583,7 @@ let rawMoviesData = [];
     };
 
     function renderMovies() {
+        updateStats();
         updateSortIcons();
         const tbody = document.getElementById('movie-tbody');
         tbody.innerHTML = '';
@@ -706,6 +716,47 @@ let rawMoviesData = [];
 
             tbody.appendChild(tr);
         });
+    }
+
+    window.toggleHideWatched = function() {
+        hideWatched = !hideWatched;
+        const btn = document.getElementById('hide-watched-toggle');
+        if (btn) {
+            btn.innerText = hideWatched ? 'Show Watched' : 'Hide Watched';
+            btn.style.background = hideWatched ? 'var(--accent-blue)' : 'var(--surface-light)';
+            btn.style.color = hideWatched ? 'white' : 'var(--text-color)';
+        }
+        renderMovies();
+    };
+
+    function updateStats() {
+        let watchedMovies = 0;
+        let totalMovies = 0;
+        let watchedSeries = 0;
+        let totalSeries = 0;
+        
+        rawMoviesData.forEach(item => {
+            const u1 = appSettings.user1_name ? item.watched_remko : true;
+            const u2 = appSettings.user2_name ? item.watched_mikaela : true;
+            const isWatched = (!appSettings.user1_name && !appSettings.user2_name) ? item.watched : (u1 && u2);
+            
+            if (item.type === 'movie') {
+                totalMovies++;
+                if (isWatched) watchedMovies++;
+            } else if (item.type === 'series') {
+                totalSeries++;
+                if (isWatched) watchedSeries++;
+            }
+        });
+        
+        const statsEl = document.getElementById('stats-container');
+        if (statsEl) {
+            let statsText = `<span style="margin-right: 15px;">🍿 Movies Completed: <strong style="color:var(--text-color);">${watchedMovies} / ${totalMovies}</strong></span>`;
+            if (totalSeries > 0) {
+                statsText += `<span>📺 Series Completed: <strong style="color:var(--text-color);">${watchedSeries} / ${totalSeries}</strong></span>`;
+            }
+            statsEl.innerHTML = statsText;
+        }
     }
 
     // Initial fetch
