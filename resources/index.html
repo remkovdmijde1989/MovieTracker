@@ -24,9 +24,14 @@
     </div>
 
     <div id="overview-view">
-        <div class="search-container" style="display: flex; gap: 1rem; align-items: center; justify-content: space-between;">
-            <input type="text" id="searchInput" class="search-input" style="flex: 1;" placeholder="Search by title or rating..." oninput="handleSearch(event)">
-            <button id="hide-watched-toggle" class="btn-back" style="margin: 0;" onclick="toggleHideWatched()">Hide Watched</button>
+        <div class="search-container" style="display: flex; gap: 1rem; align-items: center; justify-content: space-between; flex-wrap: wrap;">
+            <input type="text" id="searchInput" class="search-input" style="flex: 1; min-width: 200px;" placeholder="Search by title or rating..." oninput="handleSearch(event)">
+            
+            <select id="genreFilter" class="search-input" style="width: auto; min-width: 150px; cursor: pointer;" onchange="handleGenreFilter(event)">
+                <option value="">All Genres</option>
+            </select>
+            
+            <button id="hide-watched-toggle" class="btn-back" style="margin: 0; white-space: nowrap;" onclick="toggleHideWatched()">Hide Watched</button>
         </div>
         
         <div id="stats-container" style="margin-bottom: 1rem; color: var(--text-muted); font-size: 0.95rem;">

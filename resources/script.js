@@ -4,6 +4,7 @@ let rawMoviesData = [];
     let sortField = 'title';
     let sortAscending = true;
     let hideWatched = false;
+    let selectedGenre = '';
     let searchQuery = '';
 
     function showSaveButton(input, id, field, isMappedName = false) {
@@ -208,6 +209,7 @@ let rawMoviesData = [];
             
             if (JSON.stringify(newMovies) !== JSON.stringify(rawMoviesData)) {
                 rawMoviesData = newMovies;
+                updateGenreDropdown();
                 renderMovies();
             }
         } catch (error) {
@@ -343,6 +345,7 @@ let rawMoviesData = [];
                     const index = rawMoviesData.findIndex(m => m.id === item.id);
                     if (index !== -1) {
                         rawMoviesData[index] = { ...rawMoviesData[index], ...data.updates };
+                        updateGenreDropdown();
                     }
                 }
             }
@@ -537,6 +540,14 @@ let rawMoviesData = [];
                 const typeMatch = (item.type || '').toLowerCase().includes(searchQuery);
                 
                 return titleMatch || imdbMatch || rtCriticsMatch || typeMatch;
+            });
+        }
+        
+        if (selectedGenre) {
+            filteredData = filteredData.filter(item => {
+                if (!item.genre || item.genre === 'N/A') return false;
+                const itemGenres = item.genre.split(',').map(g => g.trim());
+                return itemGenres.includes(selectedGenre);
             });
         }
         
@@ -756,6 +767,45 @@ let rawMoviesData = [];
                 statsText += `<span>📺 Series Completed: <strong style="color:var(--text-color);">${watchedSeries} / ${totalSeries}</strong></span>`;
             }
             statsEl.innerHTML = statsText;
+        }
+    }
+
+    window.handleGenreFilter = function(event) {
+        selectedGenre = event.target.value;
+        renderMovies();
+    };
+
+    function updateGenreDropdown() {
+        const select = document.getElementById('genreFilter');
+        if (!select) return;
+        
+        const genres = new Set();
+        rawMoviesData.forEach(item => {
+            if (item.genre && item.genre !== 'N/A') {
+                item.genre.split(',').forEach(g => {
+                    const trimmed = g.trim();
+                    if (trimmed) genres.add(trimmed);
+                });
+            }
+        });
+        
+        const sortedGenres = Array.from(genres).sort();
+        const currentVal = select.value;
+        
+        let html = '<option value="">All Genres</option>';
+        sortedGenres.forEach(g => {
+            html += `<option value="${g}">${g}</option>`;
+        });
+        
+        select.innerHTML = html;
+        if (sortedGenres.includes(currentVal)) {
+            select.value = currentVal;
+        } else {
+            select.value = "";
+            if (selectedGenre) {
+                selectedGenre = "";
+                renderMovies();
+            }
         }
     }
 
