@@ -402,3 +402,108 @@
         .star-rating:hover .star.filled {
             color: var(--border-color);
         }
+
+        /* Mobile Responsive Styles */
+        @media (max-width: 768px) {
+            body {
+                padding: 1rem;
+                padding-bottom: 5rem; /* Fix scroll cut-off on mobile browsers */
+            }
+
+            .header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 1rem;
+            }
+
+            .header h1 {
+                font-size: 2rem;
+            }
+
+            .search-container {
+                flex-direction: column;
+                align-items: stretch !important;
+            }
+            
+            .search-input {
+                width: 100% !important;
+                box-sizing: border-box;
+            }
+
+            /* Convert Table to Cards */
+            .movie-table thead {
+                display: none;
+            }
+
+            .movie-table, .movie-table tbody, .movie-table tr, .movie-table td {
+                display: block;
+                width: 100%;
+                box-sizing: border-box;
+            }
+
+            .movie-table tr {
+                margin-bottom: 1.5rem;
+                background: var(--card-bg);
+                border: 1px solid var(--border-color);
+                border-radius: 12px;
+                padding: 1rem;
+                display: flex;
+                flex-direction: column;
+            }
+
+            .movie-table td {
+                display: flex !important; /* Force flex to override inline table-cell */
+                align-items: center;
+                justify-content: space-between;
+                padding: 0.5rem 0;
+                text-align: right;
+                border: none !important; /* Remove any existing table borders */
+            }
+
+            /* Title cell */
+            .movie-table td:nth-child(1) {
+                text-align: left;
+                border-bottom: 1px solid var(--border-color) !important;
+                margin-bottom: 0.5rem;
+                padding-bottom: 1rem;
+                display: block; /* Overrides flex to let content flow normally */
+            }
+            
+            .movie-table td:nth-child(1) > div {
+                width: 100%;
+            }
+
+            /* Add Labels using nth-child */
+            .movie-table td:nth-child(2)::before { content: "Progress:"; font-weight: 500; color: var(--text-muted); }
+            .movie-table td:nth-child(3)::before { content: var(--user1-label, "Watched (1):"); font-weight: 500; color: var(--text-muted); }
+            .movie-table td:nth-child(4)::before { content: var(--user2-label, "Watched (2):"); font-weight: 500; color: var(--text-muted); }
+            .movie-table td:nth-child(5)::before { content: "IMDb Rating:"; font-weight: 500; color: var(--text-muted); }
+            .movie-table td:nth-child(6)::before { content: "RT Critics:"; font-weight: 500; color: var(--text-muted); }
+            .movie-table td:nth-child(7)::before { content: "Joint Rating:"; font-weight: 500; color: var(--text-muted); }
+
+            /* Fix display for hidden columns so they stay hidden in flex container */
+            .movie-table td[style*="display: none"] {
+                display: none !important;
+            }
+
+            /* Details View */
+            #details-view > div {
+                flex-direction: column !important;
+                align-items: center;
+            }
+            
+            #details-view img {
+                width: 100% !important;
+                max-width: 300px;
+                margin-bottom: 1.5rem;
+            }
+            
+            #details-view > div > div {
+                width: 100% !important;
+            }
+
+            /* Settings View Inputs */
+            #settings-view input {
+                max-width: 100% !important;
+            }
+        }

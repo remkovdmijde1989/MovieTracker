@@ -106,6 +106,9 @@ let rawMoviesData = [];
             document.getElementById('header-user1').innerText = u1;
             document.getElementById('header-user2').innerText = u2;
             
+            document.documentElement.style.setProperty('--user1-label', `"${u1 ? u1[0] : '1'} Watched:"`);
+            document.documentElement.style.setProperty('--user2-label', `"${u2 ? u2[0] : '2'} Watched:"`);
+            
             document.getElementById('th-user1').style.display = u1 ? 'table-cell' : 'none';
             document.getElementById('th-user2').style.display = u2 ? 'table-cell' : 'none';
             
@@ -406,8 +409,8 @@ let rawMoviesData = [];
                     
                     ${(item.director && item.director !== 'N/A') || (item.actors && item.actors !== 'N/A') ? `
                     <div style="margin-bottom: 2rem; display: flex; flex-direction: column; gap: 0.5rem; font-size: 0.95rem;">
-                        ${item.director && item.director !== 'N/A' ? `<div><strong style="color: var(--text-muted); width: 80px; display: inline-block;">Director:</strong> <span style="color: var(--text-color);">${item.director}</span></div>` : ''}
-                        ${item.actors && item.actors !== 'N/A' ? `<div><strong style="color: var(--text-muted); width: 80px; display: inline-block;">Cast:</strong> <span style="color: var(--text-color);">${item.actors}</span></div>` : ''}
+                        ${item.director && item.director !== 'N/A' ? `<div style="display: flex; gap: 0.5rem;"><strong style="color: var(--text-muted); width: 80px; flex-shrink: 0;">Director:</strong> <span style="color: var(--text-color);">${item.director}</span></div>` : ''}
+                        ${item.actors && item.actors !== 'N/A' ? `<div style="display: flex; gap: 0.5rem;"><strong style="color: var(--text-muted); width: 80px; flex-shrink: 0;">Cast:</strong> <span style="color: var(--text-color);">${item.actors}</span></div>` : ''}
                     </div>` : ''}
                     
                     <div style="margin-bottom: 2rem;">
@@ -445,7 +448,7 @@ let rawMoviesData = [];
                 <div id="omdb-results" style="margin-top: 10px; display: none; background: var(--surface-light); border: 1px solid var(--border-color); border-radius: 4px; padding: 10px; max-height: 200px; overflow-y: auto;"></div>
             </div>
             
-            <div style="display: flex; gap: 1rem; margin-bottom: 2rem;">
+            <div style="display: flex; flex-wrap: wrap; gap: 1rem; margin-bottom: 2rem;">
                 <div class="rating-badge rating-imdb">
                     <span class="icon">★</span> 
                     <input type="text" class="rating-input" style="width: 40px; background: transparent; border: 1px solid transparent; color: inherit; font-size: inherit; text-align: center;" value="${item.imdb !== 'N/A' ? item.imdb : ''}" 
