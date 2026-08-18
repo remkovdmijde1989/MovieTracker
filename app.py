@@ -7,8 +7,13 @@ import threading
 import webbrowser
 
 PORT = 8080
-DB_FILE = "resources/db.json"
-SETTINGS_FILE = "resources/settings.json"
+ANDROID_DATA_DIR = os.environ.get('ANDROID_DATA_DIR')
+if ANDROID_DATA_DIR:
+    DB_FILE = os.path.join(ANDROID_DATA_DIR, "db.json")
+    SETTINGS_FILE = os.path.join(ANDROID_DATA_DIR, "settings.json")
+else:
+    DB_FILE = "resources/db.json"
+    SETTINGS_FILE = "resources/settings.json"
 
 def load_db():
     if os.path.exists(DB_FILE):
