@@ -2,3 +2,4 @@ db.json
 settings.json
 *.pyc
 __pycache__/
+.archive/
